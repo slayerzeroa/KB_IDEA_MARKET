@@ -5,7 +5,10 @@ from multiprocessing import Pool
 import requests
 from selenium import webdriver
 import numpy as np
+
 from pykospacing import Spacing
+# pip install git+https://github.com/haven-jeon/PyKoSpacing.git
+# NLP 전처리 과정 도와주는 라이브러리
 
 class EHHelper:
     @staticmethod
