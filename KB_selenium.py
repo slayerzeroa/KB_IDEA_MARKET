@@ -5,7 +5,7 @@ from multiprocessing import Pool
 import requests
 from selenium import webdriver
 import numpy as np
-
+from pykospacing import Spacing
 
 class EHHelper:
     @staticmethod
@@ -229,10 +229,9 @@ while True:
             elif value == 'CFD' or 'cfd':
                 searching_keyword[index] = '차익거래'
 
-    if ' ' in searching_keyword:
-        keyword_list = searching_keyword.split()
-    else:
-        keyword_list.append(searching_keyword)
+    spacing = Spacing()         # 띄어쓰기 전처리 과정 NLP
+    keyword_list = spacing(searching_keyword).split()   # 띄어쓰기 된 문장 단어 단위 저장
+
 
     filtered_link = []  # 필터된 링크 리스트 생성
     ranking_dict = {}   # 랭킹 딕셔너리 생성
@@ -243,19 +242,6 @@ while True:
         for key, value in result_dic.items():
             if searching_keyword in value:
                 filtered_link.append(key)
-
-    # 만약 띄어쓰기가 안 되어 있을 때 -> 단어 분리 (지금은 임시방편으로 만듦)
-    if len(keyword_list) == 1 and len(filtered_link) == 0:
-        expect_word = ''
-        expect_word_list = []
-        for spell in keyword_list[0]:
-            expect_word+=spell
-            expect_word_list.append(expect_word)
-            for key, value in result_dic.items():
-                if expect_word in value:
-                    filtered_link.append(key)
-        keyword_list = expect_word_list
-
     filtered_link = list(set(filtered_link))
     # TF-IDF
     # 적중되는 키워드 수만큼 추가 점수
